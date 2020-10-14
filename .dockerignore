@@ -2,3 +2,4 @@
 *.md
 Dockerfile
 .vscode
+.github
