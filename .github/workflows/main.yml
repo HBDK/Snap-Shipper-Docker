@@ -1,8 +1,8 @@
-name: ci
+name: build
 
 on:
-  push:
-    branches: main
+  release:
+    types: [published]
 
 jobs:
   multi:
@@ -23,6 +23,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: store tag
+        id: vars
+        run: echo ::set-output name=docker_tag::hbdk/snap-shipper:$(cat $GITHUB_EVENT_PATH | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/')
       -
         name: Build and push
         uses: docker/build-push-action@v2
@@ -32,4 +36,4 @@ jobs:
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64
           push: true
           tags: |
-            hbdk/snap-shipper:0.0.1rc0
+            ${{ steps.vars.outputs.docker_tag }}
