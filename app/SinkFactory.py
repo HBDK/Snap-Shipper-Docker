@@ -1,8 +1,10 @@
 from webdavclient import WebDavClient
+from S3Client import S3Client
 import logging
 
+
 class SinkFactory:
-    def __init__(self,sinks):
+    def __init__(self, sinks):
         self.Sinks = []
         for sink in sinks:
             keys = sink.keys()
@@ -16,14 +18,27 @@ class SinkFactory:
                 try:
                     client = WebDavClient(sink)
                 except Exception as err:
-                    logging.warning("Couldn't create sink {} skipping \n{}:\n{}".format(sink["Name"],type(err).__name__,err))
+                    logging.warning("Couldn't create sink {} skipping \n{}:\n{}".format(
+                        sink["Name"], type(err).__name__, err))
                     continue
-                
+
+                self.Sinks.append(client)
+                continue
+
+            if "S3Client" in keys:
+                logging.debug("Adding S3 Sink: {}".format(sink["Name"]))
+                try:
+                    client = S3Client(sink)
+                except Exception as err:
+                    logging.warning("Couldn't create sink {} skipping \n{}:\n{}".format(
+                        sink["Name"], type(err).__name__, err))
+                    continue
+
                 self.Sinks.append(client)
                 continue
 
             logging.warning("Couldn't create sink for:\n" + str(sink))
-        
+
         if not self.Sinks:
             logging.error("couldn't create any sinks, exiting")
             exit()
