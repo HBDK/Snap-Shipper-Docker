@@ -9,6 +9,15 @@
                 "webdav_login":    "",
                 "webdav_password": ""
             }
+        },
+        {
+            "Name": "AWS",
+            "S3Client": {
+                "endpoint_url": "https://s3.eu-west-1.amazonaws.com",
+                "aws_access_key": "",
+                "aws_secret_access_key": "",
+                "bucket": ""
+            }
         }
     ]
 }
