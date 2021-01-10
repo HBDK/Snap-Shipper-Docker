@@ -25,3 +25,5 @@ for file in listdir(options.Folder):
                     client.Upload(remote_path=file, local_path=path)
             else:
                 logging.info("Skipping: {} for: {}".format(file,client.Name))
+
+logging.info("Done....")
